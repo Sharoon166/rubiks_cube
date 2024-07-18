@@ -47,20 +47,14 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
 directionalLight.position.set(5, 15, 5);
 scene.add(directionalLight);
 
-const directionHelper = new THREE.DirectionalLightHelper(directionalLight)
-// scene.add(directionHelper)
-
 const spotlight = new THREE.SpotLight(0xffffff, 1000, 30)
 spotlight.position.set(20,10,10)
 scene.add(spotlight)
 
-const spotHelper = new THREE.SpotLightHelper(spotlight)
-// scene.add(spotHelper)
-
 const clock = new THREE.Clock();
 let mixer = null;
 gltfLoader.load(
-  "./scene.gltf",
+  "/scene.gltf",
   (gltf) => {
     const model = gltf.scene;
     model.position.set(0, 0, 0);

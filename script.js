@@ -18,9 +18,9 @@ renderer.render(scene, camera);
 
 const textureLoader = new THREE.TextureLoader();
 
-const earthTexture = textureLoader.load("./world5400x2700.jpg");
+const earthTexture = textureLoader.load("/world5400x2700.jpg");
 
-const moonTexture = textureLoader.load("./moon.jpg");
+const moonTexture = textureLoader.load("/moon.jpg");
 
 const gemoetry = new THREE.SphereGeometry(5, 200, 200);
 const material = new THREE.MeshStandardMaterial({
