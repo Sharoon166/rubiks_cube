@@ -4,19 +4,21 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath(
+  "https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+);
+dracoLoader.preload();
+
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0a0a);
+
 const camera = new THREE.PerspectiveCamera(
   45,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
-
-const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath(
-  "https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
-);
-dracoLoader.preload();
 
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
@@ -36,20 +38,24 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.01;
 controls.enableZoom = false;
 controls.enablePan = false;
-controls.maxPolarAngle = Math.PI / 2
-controls.minPolarAngle = Math.PI / 2
 
+const ambient = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambient);
 
-const ambient = new THREE.AmbientLight(0xffffff, 0.05)
-scene.add(ambient)
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
-directionalLight.position.set(5, 15, 5);
+const directionalLight = new THREE.DirectionalLight(0xffffff);
+directionalLight.position.set(0, 50, 5);
 scene.add(directionalLight);
 
-const spotlight = new THREE.SpotLight(0xffffff, 1000, 30)
-spotlight.position.set(20,10,10)
-scene.add(spotlight)
+const spotlight = new THREE.SpotLight(0xffffff, 10000, 50);
+spotlight.position.set(20, 10, 10);
+scene.add(spotlight);
+
+const pointLight = new THREE.PointLight(0xffffff, 10000);
+scene.add(pointLight);
+
+const pointLight2 = new THREE.PointLight(0xfff555, 10);
+pointLight2.position.set(0, 0, 8);
+scene.add(pointLight2);
 
 const clock = new THREE.Clock();
 let mixer = null;
@@ -57,22 +63,20 @@ gltfLoader.load(
   "/scene.gltf",
   (gltf) => {
     const model = gltf.scene;
-    model.position.set(0, 0, 0);
     model.name = "Cube";
-        model.traverse((child) => {
-          if (child.isMesh) {
-            child.material.metalness = 0.9; // Increase this value (0-1)
-            child.material.roughness = 0.01
-            child.material.needsUpdate = true;
-          }
-        });
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.material.metalness = 0.9;
+        child.material.roughness = 0.01;
+        child.material.reflectivity = 0.9;
+      }
+    });
 
     const animations = gltf.animations;
     mixer = new THREE.AnimationMixer(model);
     const action = mixer.clipAction(animations[0]);
     action.play();
-    action.setEffectiveTimeScale(0.75);
-    
+    action.setEffectiveTimeScale(0.7);
 
     scene.add(model);
   },
@@ -87,8 +91,11 @@ function animate() {
   mixer?.update(delta);
 
   if (scene.getObjectByName("Cube")) {
-    scene.getObjectByName("Cube").rotation.z += 0.01;
-    scene.getObjectByName("Cube").rotation.y += 0.01;
+    const cube = scene.getObjectByName("Cube");
+
+    cube.rotation.x += 0.005;
+    cube.rotation.y += 0.005;
+    cube.rotation.z += 0.002;
   }
 
   controls.update();

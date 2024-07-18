@@ -19,7 +19,7 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.01
 
 
-const geo = new THREE.IcosahedronGeometry(2,1);
+const geo = new THREE.IcosahedronGeometry(2, 2)
 const mat = new THREE.MeshStandardMaterial({
     color: 0xffffffff,
     flatShading: true
@@ -31,7 +31,7 @@ scene.add(decahedron);
 const decaWire = new THREE.Mesh(
   geo,
   new THREE.MeshBasicMaterial({
-    color: 0xef1201,
+    color: 0x00f2ff,
     wireframe: true,
   })
 ); 
